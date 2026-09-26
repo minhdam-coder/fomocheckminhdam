@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>FOMO Check Minh Đạm</title>
+  <style>
+    :root{
+      --bg:#f6f8ff; --card:#ffffff; --text:#182033; --muted:#667085;
+      --blue:#2563eb; --blue2:#4f46e5; --purple:#8b5cf6; --lav:#ede9fe;
+      --line:#e7eaf3; --green:#059669; --orange:#d97706; --red:#dc2626;
+      --shadow:0 12px 30px rgba(59,72,130,.10);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+    body{
+      margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", Roboto, Arial, sans-serif; color:var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(99,102,241,.10), transparent 30%),
+        radial-gradient(circle at 100% 10%, rgba(139,92,246,.10), transparent 28%),
+        var(--bg);
+      min-height:100vh;
+    }
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+    .app{display:grid; grid-template-columns:270px 1fr; min-height:100vh}
+    .sidebar{
+      padding-top:calc(22px + env(safe-area-inset-top));
+      position:sticky; top:0; height:100vh; padding:22px 16px; border-right:1px solid var(--line);
+      background:rgba(255,255,255,.86); backdrop-filter: blur(14px); z-index:20;
+    }
+    .brand{display:flex;gap:12px;align-items:center;padding:8px 10px 18px}
+    .brand-mark{
+      width:44px;height:44px;border-radius:15px;display:grid;place-items:center;color:white;font-weight:900;
+      background:linear-gradient(135deg,var(--blue),var(--purple)); box-shadow:var(--shadow)
+    }
+    .brand strong{display:block;font-size:17px}
+    .brand small{color:var(--muted)}
+    nav{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+    .nav-btn{
+      border:0;background:transparent;color:#374151;text-align:left;border-radius:14px;padding:11px 12px;
+      display:flex;align-items:center;gap:10px;font-weight:650
+    }
+    .nav-btn:hover,.nav-btn.active{background:linear-gradient(90deg,#eef2ff,#f5f3ff);color:var(--blue2)}
+    .nav-icon{width:24px;text-align:center}
+    .sidebar-note{
+      margin-top:18px;padding:14px;border-radius:16px;background:#f7f7ff;border:1px solid #e7e7ff;
+      font-size:12.5px;color:var(--muted);line-height:1.45
+    }
+    .main{padding:24px 28px calc(60px + env(safe-area-inset-bottom));min-width:0}
+    .topbar{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:20px}
+    .topbar h1{margin:0;font-size:clamp(22px,3vw,34px);letter-spacing:-.02em}
+    .topbar p{margin:6px 0 0;color:var(--muted)}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;
+      background:#eef2ff;color:#4338ca;font-weight:750;font-size:13px
+    }
+    .mobile-menu{display:none;border:0;background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 11px}
+    .page{display:none;animation:fade .2s ease}
+    .page.active{display:block}
+    @keyframes fade{from{opacity:.25;transform:translateY(3px)}to{opacity:1;transform:none}}
+    .hero{
+      background:linear-gradient(135deg,#eef4ff 0%,#f5f0ff 100%);border:1px solid #dfe5ff;
+      border-radius:28px;padding:28px;box-shadow:var(--shadow);overflow:hidden;position:relative
+    }
+    .hero:after{content:"";position:absolute;right:-70px;top:-80px;width:220px;height:220px;border-radius:50%;background:rgba(99,102,241,.12)}
+    .hero h2{margin:0 0 10px;font-size:clamp(26px,4vw,42px);max-width:760px;letter-spacing:-.03em}
+    .hero p{color:#556070;line-height:1.65;max-width:780px;margin:0 0 18px}
+    .btn-row{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      border:0;border-radius:14px;padding:11px 16px;font-weight:750;transition:.15s ease
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{color:#fff;background:linear-gradient(135deg,var(--blue),var(--blue2));box-shadow:0 8px 18px rgba(79,70,229,.22)}
+    .btn-soft{background:#eef2ff;color:#4338ca}
+    .btn-outline{background:#fff;border:1px solid var(--line);color:#344054}
+    .btn-danger{background:#fff1f2;color:#be123c}
+    .grid{display:grid;gap:16px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .card{
+      background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:19px;box-shadow:0 8px 24px rgba(59,72,130,.06)
+    }
+    .card h3{margin:0 0 8px;font-size:18px}
+    .card p{color:var(--muted);line-height:1.55}
+    .section-title{margin:26px 0 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .section-title h2,.section-title h3{margin:0}
+    .highlight{
+      display:inline-block;background:linear-gradient(transparent 55%,#dbeafe 55%);padding:0 2px
+    }
+    .progress-wrap{margin-top:18px;background:#eef1f7;border-radius:999px;height:12px;overflow:hidden}
+    .progress-bar{height:100%;width:14%;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:999px;transition:.35s ease}
+    .kpis{display:grid;grid-template-columns:repeat(6,minmax(140px,1fr));gap:12px;overflow-x:auto;padding-bottom:4px}
+    .kpi{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;min-width:140px}
+    .kpi .label{font-size:12px;color:var(--muted);font-weight:650}
+    .kpi .value{font-size:24px;font-weight:850;margin-top:5px}
+    .kpi .sub{font-size:12px;color:var(--muted);margin-top:2px}
+    label{display:block;font-weight:700;margin:0 0 7px}
+    input[type=text],input[type=number],input[type=time],input[type=date],select,textarea{
+      width:100%;border:1px solid #d8ddea;background:#fff;border-radius:13px;padding:11px 12px;color:var(--text);outline:none
+    }
+    input:focus,select:focus,textarea:focus{border-color:#818cf8;box-shadow:0 0 0 3px rgba(99,102,241,.11)}
+    textarea{min-height:94px;resize:vertical}
+    .field{margin-bottom:15px}
+    .inline-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .checks{display:flex;gap:9px;flex-wrap:wrap}
+    .check-chip{position:relative}
+    .check-chip input{position:absolute;opacity:0;pointer-events:none}
+    .check-chip span{
+      display:inline-block;padding:9px 12px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#475467;font-weight:650
+    }
+    .check-chip input:checked+span{background:#eef2ff;border-color:#a5b4fc;color:#4338ca}
+    .scale{display:flex;gap:8px;flex-wrap:wrap}
+    .scale label{margin:0}
+    .scale input{display:none}
+    .scale span{
+      width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:12px;background:#fff
+    }
+    .scale input:checked+span{background:#4f46e5;color:#fff;border-color:#4f46e5}
+    .notice{
+      border-radius:16px;padding:14px 16px;background:#f0f7ff;border:1px solid #cfe5ff;color:#33506b;line-height:1.5
+    }
+    .success{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
+    .warn{background:#fff7ed;border-color:#fed7aa;color:#9a3412}
+    .danger{background:#fff1f2;border-color:#fecdd3;color:#9f1239}
+    .quiz-item{padding:15px 0;border-bottom:1px dashed #e7eaf3}
+    .quiz-item:last-child{border-bottom:0}
+    .quiz-item p{margin:0 0 10px;color:#344054;font-weight:650}
+    .radio-row{display:flex;gap:7px;flex-wrap:wrap}
+    .radio-row label{margin:0}
+    .radio-row input{display:none}
+    .radio-row span{display:block;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font-size:13px;color:#475467}
+    .radio-row input:checked+span{background:#eef2ff;border-color:#818cf8;color:#4338ca;font-weight:800}
+    .schedule-list{display:grid;gap:10px}
+    .schedule-item{display:grid;grid-template-columns:128px 1fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff}
+    .schedule-time{font-weight:850;color:#4338ca}
+    .tag{font-size:12px;font-weight:800;padding:5px 8px;border-radius:999px;background:#eef2ff;color:#4338ca}
+    .timeline{position:relative;padding-left:24px}
+    .timeline:before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:#ddd6fe}
+    .timeline-item{position:relative;margin-bottom:16px}
+    .timeline-item:before{content:"";position:absolute;left:-21px;top:6px;width:12px;height:12px;border-radius:50%;background:#8b5cf6;border:3px solid #f5f3ff}
+    .timeline-day{font-weight:850}
+    .timeline-entry{margin-top:6px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}
+    .timeline-entry img{max-width:100%;border-radius:12px;margin-top:8px}
+    .chart{height:220px;position:relative;background:linear-gradient(#fff,#fafbff);border:1px solid var(--line);border-radius:16px;padding:12px}
+    canvas{width:100%;height:100%;display:block}
+    .streak{
+      display:flex;align-items:center;gap:14px;padding:17px;border-radius:18px;background:linear-gradient(135deg,#fff7ed,#fff)
+    }
+    .streak .fire{font-size:38px}
+    .streak strong{font-size:24px}
+    .buddy-messages{display:grid;gap:10px;max-height:310px;overflow:auto}
+    .msg{padding:10px 12px;border-radius:14px;background:#f8f9ff;border:1px solid var(--line)}
+    .msg strong{display:block;font-size:13px;margin-bottom:2px}
+    .msg small{color:var(--muted)}
+    .compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .compare-box{border:1px solid var(--line);border-radius:16px;padding:15px;background:#fff}
+    .delta{font-weight:900;font-size:20px;margin-top:6px}
+    .muted{color:var(--muted)}
+    .small{font-size:12.5px}
+    .hidden{display:none!important}
+    .footer{margin-top:28px;color:#98a2b3;font-size:12px;text-align:center}
+    .toast{
+      position:fixed;right:18px;bottom:18px;z-index:80;max-width:340px;background:#111827;color:#fff;
+      border-radius:14px;padding:12px 14px;box-shadow:var(--shadow);opacity:0;transform:translateY(10px);pointer-events:none;transition:.22s
+    }
+    .toast.show{opacity:1;transform:none}
+    .overlay{display:none}
+    .divider{height:1px;background:var(--line);margin:18px 0}
+    .mini-stat{font-size:13px;color:var(--muted)}
+    .mini-stat b{color:var(--text)}
+    @media(max-width:1100px){
+      .grid-4{grid-template-columns:repeat(2,1fr)}
+      .grid-3{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:820px){
+      .app{grid-template-columns:1fr}
+      .sidebar{
+        position:fixed;left:0;top:0;bottom:0;width:285px;transform:translateX(-105%);transition:.22s ease;
+        box-shadow:20px 0 45px rgba(31,41,55,.14)
+      }
+      .sidebar.open{transform:none}
+      .overlay{display:block;position:fixed;inset:0;background:rgba(15,23,42,.28);z-index:15;opacity:0;pointer-events:none;transition:.2s}
+      .overlay.show{opacity:1;pointer-events:auto}
+      .mobile-menu{display:inline-block}
+      .main{padding:16px 14px 48px}
+      .topbar{align-items:flex-start}
+      .grid-2,.grid-3,.grid-4,.inline-fields,.compare{grid-template-columns:1fr}
+      .hero{padding:22px 18px}
+      .schedule-item{grid-template-columns:1fr}
+      .schedule-item .tag{justify-self:start}
+    }
+    @media(max-width:430px){
+      .main{padding-left:12px;padding-right:12px}
+      .card{padding:15px;border-radius:18px}
+      .hero{border-radius:22px}
+      .btn{width:100%}
+      .btn-row{display:grid;grid-template-columns:1fr}
+      .topbar .pill{display:none}
+      .radio-row span{padding:8px 9px}
+      .scale span{width:37px;height:37px}
+    }
+  
+  /* ===== LANDING PAGE TÍCH HỢP TỪ FOMO CHECK CŨ ===== */
+  .public-landing{
+    margin:-24px -28px 24px;
+    padding:0 28px 42px;
+    color:#fff;
+    background:linear-gradient(145deg,#b046e7 0%,#7d45e8 45%,#4937ce 100%);
+    position:relative;
+    overflow:hidden;
+  }
+  .public-landing:before,.public-landing:after{
+    content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.09)
+  }
+  .public-landing:before{width:290px;height:290px;right:-90px;bottom:40px}
+  .public-landing:after{width:160px;height:160px;left:8%;bottom:-70px}
+  .public-nav{
+    min-height:74px;display:flex;align-items:center;justify-content:space-between;
+    gap:14px;position:relative;z-index:2
+  }
+  .public-brand{font-weight:900;font-size:19px;display:flex;align-items:center;gap:8px}
+  .public-brand:before{content:"▣";color:#26e0d7}
+  .public-links{display:flex;gap:14px;flex-wrap:wrap}
+  .public-links button{
+    border:0;background:rgba(255,255,255,.12);color:#fff;padding:10px 14px;
+    border-radius:999px;font-weight:750
+  }
+  .public-links .accent{background:#ffb55f}
+  .public-hero{
+    display:grid;grid-template-columns:1.08fr .92fr;gap:40px;align-items:center;
+    padding:48px 0 20px;position:relative;z-index:2
+  }
+  .public-eyebrow{font-size:12px;letter-spacing:1.7px;font-weight:900;color:#83f5eb;text-transform:uppercase}
+  .public-hero h2{font-size:clamp(40px,6vw,68px);line-height:1.04;margin:12px 0 18px;letter-spacing:-2px}
+  .public-hero p{color:#f1eaff;line-height:1.7;max-width:620px;margin:0 0 22px}
+  .public-actions{display:flex;gap:10px;flex-wrap:wrap}
+  .public-cta{
+    border:0;border-radius:999px;padding:13px 19px;font-weight:850;background:#14c9c2;color:#fff
+  }
+  .public-cta.alt{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3)}
+  .public-art{height:300px;position:relative;display:grid;place-items:center}
+  .public-screen{
+    width:350px;height:220px;background:#fff;border:13px solid #343053;border-radius:11px;
+    box-shadow:0 22px 45px rgba(38,20,100,.28);position:relative
+  }
+  .public-screen:before{content:"FOMO CHECK";position:absolute;left:24px;top:30px;color:#704be1;font-weight:900;font-size:26px}
+  .public-screen:after{content:"Hiểu mình • Thực hành JOMO • Tập trung hơn";position:absolute;left:24px;top:72px;color:#8b8aa0;font-size:12px}
+  .public-card{
+    position:absolute;background:#fff;color:#6c54d7;border-radius:13px;padding:13px 17px;
+    font-weight:900;box-shadow:0 12px 26px rgba(45,25,100,.18)
+  }
+  .pc1{left:0;top:45px}.pc2{right:-4px;bottom:45px;color:#10a9a5}.pc3{left:90px;bottom:8px;color:#e45c91}
+  .public-features{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:18px;position:relative;z-index:2
+  }
+  .public-feature{
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);
+    border-radius:13px;padding:13px 10px;text-align:center;font-size:12px;font-weight:800
+  }
+  @media(max-width:820px){
+    .public-landing{margin:-16px -14px 20px;padding:0 14px 34px}
+    .public-hero{grid-template-columns:1fr;text-align:center;padding-top:34px}
+    .public-hero p{margin-left:auto;margin-right:auto}
+    .public-actions{justify-content:center}
+    .public-art{height:235px}
+    .public-screen{width:285px;height:180px}
+    .public-screen:before{font-size:21px}
+    .public-features{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:430px){
+    .public-links button:not(.accent){display:none}
+    .public-art{display:none}
+    .public-hero{padding-bottom:4px}
+    .public-actions{display:grid;grid-template-columns:1fr}
+    .public-cta{width:100%}
+  }
+
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">FC</div>
+      <div><strong>FOMO Check Minh Đạm</strong><small>JOMO 7 ngày</small></div>
+    </div>
+    <nav id="nav">
+      <button type="button" class="nav-btn active" data-page="home"><span class="nav-icon">⌂</span>Trang chủ</button>
+      <button type="button" class="nav-btn" data-page="assessment"><span class="nav-icon">✓</span>Đánh giá FOMO</button>
+      <button type="button" class="nav-btn" data-page="plan"><span class="nav-icon">7</span>Kế hoạch 7 ngày</button>
+      <button type="button" class="nav-btn" data-page="schedule"><span class="nav-icon">◷</span>Thời khóa biểu</button>
+      <button type="button" class="nav-btn" data-page="streak"><span class="nav-icon">🔥</span>Chuỗi JOMO</button>
+      <button type="button" class="nav-btn" data-page="journal"><span class="nav-icon">✎</span>Nhật ký JOMO</button>
+      <button type="button" class="nav-btn" data-page="buddy"><span class="nav-icon">☺</span>Bạn đồng hành</button>
+      <button type="button" class="nav-btn" data-page="content"><span class="nav-icon">◉</span>Nội dung khiến tôi FOMO</button>
+      <button type="button" class="nav-btn" data-page="dashboard"><span class="nav-icon">▥</span>Tiến trình của tôi</button>
+      <button type="button" class="nav-btn" data-page="final"><span class="nav-icon">★</span>Đánh giá cuối chương trình</button>
+    </nav>
+    <div class="sidebar-note">
+      Đây là công cụ tự theo dõi và hỗ trợ thói quen số, không phải công cụ chẩn đoán tâm lý.
+    </div>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+
+  <main class="main">
+
+    <section class="public-landing" id="publicLanding">
+      <div class="public-nav">
+        <div class="public-brand">FOMO Check Minh Đạm</div>
+        <div class="public-links">
+          <button type="button" onclick="document.getElementById('publicLanding').scrollIntoView({behavior:'smooth'})">Giới thiệu</button>
+          <button type="button" onclick="go('assessment')">Đánh giá FOMO</button>
+          <button type="button" class="accent" onclick="go('plan')">JOMO 7 ngày</button>
+        </div>
+      </div>
+
+      <div class="public-hero">
+        <div>
+          <div class="public-eyebrow">Dự án khoa học kĩ thuật • THPT Minh Đạm</div>
+          <h2>Hiểu FOMO.<br>Sống cân bằng hơn.</h2>
+          <p>FOMO Check Minh Đạm kết hợp bài đánh giá FOMO với chương trình JOMO 7 ngày, giúp học sinh theo dõi thói quen mạng xã hội, điều chỉnh dần thời gian sử dụng và quan sát thay đổi trước – sau.</p>
+          <div class="public-actions">
+            <button type="button" class="public-cta" onclick="go('assessment')">Bắt đầu đánh giá</button>
+            <button type="button" class="public-cta alt" onclick="go('dashboard')">Xem tiến trình JOMO</button>
+          </div>
+        </div>
+        <div class="public-art">
+          <div class="public-screen"></div>
+          <div class="public-card pc1">📱 FOMO</div>
+          <div class="public-card pc2">✓ JOMO</div>
+          <div class="public-card pc3">🎯 Focus</div>
+        </div>
+      </div>
+
+      <div class="public-features">
+        <div class="public-feature">📱 Kiểm tra MXH</div>
+        <div class="public-feature">😟 Lo sợ bỏ lỡ</div>
+        <div class="public-feature">🔥 Bắt kịp xu hướng</div>
+        <div class="public-feature">👥 So sánh xã hội</div>
+        <div class="public-feature">🎯 Mất tập trung</div>
+      </div>
+    </section>
+
+    <div class="topbar">
+      <div>
+        <button type="button" class="mobile-menu" id="mobileMenu">☰</button>
+        <h1 id="topTitle">FOMO Check Minh Đạm</h1>
+        <p id="topSubtitle">Chương trình JOMO 7 ngày dành cho học sinh THPT.</p>
+      </div>
+      <div class="pill" id="dayPill">Ngày 1/7</div>
+    </div>
+
+    <section id="home" class="page active">
+      <div class="hero">
+        <h2><span class="highlight">Bớt bị cuốn theo</span>, tập trung vào điều quan trọng với bạn.</h2>
+        <p>FOMO Check Minh Đạm giúp bạn tự đánh giá thói quen sử dụng mạng xã hội, xây dựng lịch phù hợp, check-in mỗi ngày và theo dõi thay đổi trong 7 ngày theo hướng JOMO.</p>
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary" onclick="go('assessment')">Bắt đầu đánh giá</button>
+          <button type="button" class="btn btn-soft" onclick="go('dashboard')">Xem tiến trình</button>
+        </div>
+        <div class="progress-wrap"><div class="progress-bar" id="homeProgress"></div></div>
+        <p class="small" id="homeProgressText" style="margin-top:8px">Tiến trình: Ngày 1/7</p>
+      </div>
+
+      <div class="section-title"><h2><span class="highlight">Hôm nay của bạn</span></h2></div>
+      <div class="kpis">
+        <div class="kpi"><div class="label">Điểm FOMO</div><div class="value" id="kpiFomo">—</div><div class="sub">tự đánh giá</div></div>
+        <div class="kpi"><div class="label">MXH hôm nay</div><div class="value" id="kpiUsage">—</div><div class="sub">giờ</div></div>
+        <div class="kpi"><div class="label">Mục tiêu</div><div class="value" id="kpiGoal">—</div><div class="sub">giờ/ngày</div></div>
+        <div class="kpi"><div class="label">Chuỗi JOMO</div><div class="value" id="kpiStreak">0</div><div class="sub">ngày</div></div>
+        <div class="kpi"><div class="label">Tập trung</div><div class="value" id="kpiFocus">—</div><div class="sub">/5</div></div>
+        <div class="kpi"><div class="label">Phiên học</div><div class="value" id="kpiSessions">0</div><div class="sub">không điện thoại</div></div>
+      </div>
+
+      <div class="grid grid-3" style="margin-top:16px">
+        <div class="card"><h3>1. Đánh giá</h3><p>Ghi nhận điểm tự đánh giá FOMO và thói quen sử dụng MXH ban đầu.</p></div>
+        <div class="card"><h3>2. Điều chỉnh từng ngày</h3><p>Lịch sử dụng MXH thay đổi dựa trên check-in, không ép giảm đột ngột.</p></div>
+        <div class="card"><h3>3. So sánh trước – sau</h3><p>Ngày 7, xem xu hướng thay đổi của FOMO, thời gian MXH và khả năng tập trung.</p></div>
+      </div>
+    </section>
+
+    <section id="assessment" class="page">
+      <div class="card">
+        <div class="section-title" style="margin-top:0"><h2><span class="highlight">Đánh giá FOMO – Ngày 1</span></h2></div>
+        <p class="muted">Chọn mức phù hợp nhất với bạn trong thời gian gần đây. 1 = hầu như không, 5 = rất thường xuyên.</p>
+        <form id="assessmentForm">
+          <div id="quiz"></div>
+          <div class="divider"></div>
+          <div class="inline-fields">
+            <div class="field"><label>Tên hoặc biệt danh</label><input type="text" id="name" placeholder="Ví dụ: Minh" required></div>
+            <div class="field"><label>Thời lượng MXH trung bình mỗi ngày (giờ)</label><input type="number" id="usageHours" min="0" max="24" step="0.1" placeholder="Ví dụ: 4.5" required></div>
+            <div class="field"><label>Số lần kiểm tra điện thoại/MXH mỗi ngày</label><input type="number" id="checkCount" min="0" max="500" placeholder="Ví dụ: 35" required></div>
+            <div class="field"><label>Khung giờ dùng MXH nhiều nhất</label>
+              <select id="peakTime"><option>Sáng</option><option>Trưa</option><option>Chiều</option><option selected>Tối</option><option>Khuya</option></select>
+            </div>
+          </div>
+          <div class="field"><label>Nền tảng thường dùng</label>
+            <div class="checks" id="platforms">
+              <label class="check-chip"><input type="checkbox" value="TikTok"><span>TikTok</span></label>
+              <label class="check-chip"><input type="checkbox" value="Facebook"><span>Facebook</span></label>
+              <label class="check-chip"><input type="checkbox" value="Instagram"><span>Instagram</span></label>
+              <label class="check-chip"><input type="checkbox" value="Zalo"><span>Zalo</span></label>
+              <label class="check-chip"><input type="checkbox" value="YouTube"><span>YouTube</span></label>
+            </div>
+          </div>
+          <div class="inline-fields">
+            <div class="field"><label>Mức khó chịu khi không được kiểm tra MXH</label><div class="scale" id="initialDiscomfort"></div></div>
+            <div class="field"><label>Mức độ tập trung khi học</label><div class="scale" id="initialFocus"></div></div>
+          </div>
+          <div class="field"><label>Thời gian học chính trong ngày</label>
+            <div class="inline-fields">
+              <input type="time" id="studyStart" value="19:00">
+              <input type="time" id="studyEnd" value="21:00">
+            </div>
+          </div>
+          <div class="section-title"><h3>Nhật ký JOMO – Ngày 1</h3></div>
+          <div class="field"><label>Khi không cầm điện thoại, bạn thường cảm thấy thế nào?</label><textarea id="day1Feel" required></textarea></div>
+          <div class="field"><label>Điều gì khiến bạn muốn mở mạng xã hội?</label><textarea id="day1Trigger" required></textarea></div>
+          <div class="field"><label>Bạn có bị mất tập trung khi học vì điện thoại không?</label><textarea id="day1Distracted" required></textarea></div>
+          <div class="notice">Đây là dữ liệu ban đầu để FOMO Check Minh Đạm xây dựng kế hoạch phù hợp với bạn.</div>
+          <div class="btn-row" style="margin-top:16px"><button type="submit" class="btn btn-primary">Lưu đánh giá & tạo kế hoạch</button></div>
+        </form>
+        <div id="assessmentResult" class="notice success hidden" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section id="plan" class="page">
+      <div class="section-title"><h2><span class="highlight">Kế hoạch JOMO 7 ngày</span></h2></div>
+      <div class="grid grid-4" id="planCards"></div>
+      <div class="card" style="margin-top:16px">
+        <h3>Check-in cuối ngày</h3>
+        <p class="muted">Từ Ngày 2 đến Ngày 6, nhập dữ liệu thực tế để hệ thống điều chỉnh mục tiêu ngày kế tiếp.</p>
+        <form id="checkinForm">
+          <div class="inline-fields">
+            <div class="field"><label>Ngày check-in</label><select id="checkinDay"></select></div>
+            <div class="field"><label>Thời gian MXH hôm nay (giờ)</label><input type="number" id="ciUsage" min="0" max="24" step="0.1" required></div>
+            <div class="field"><label>Số lần kiểm tra điện thoại</label><input type="number" id="ciChecks" min="0" max="500" required></div>
+            <div class="field"><label>Hoàn thành thời khóa biểu (%)</label><input type="number" id="ciCompletion" min="0" max="100" required></div>
+            <div class="field"><label>Khó chịu vì bỏ lỡ thông tin (1–5)</label><select id="ciDiscomfort"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+            <div class="field"><label>Mức tập trung khi học (1–5)</label><select id="ciFocus"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
+            <div class="field"><label>Phiên học không điện thoại</label><input type="number" id="ciSessions" min="0" max="20" value="1"></div>
+            <div class="field"><label>Số hoạt động JOMO đã thực hiện</label><input type="number" id="ciActivities" min="0" max="20" value="1"></div>
+          </div>
+          <div class="field"><label>Bạn có cảm thấy cần cập nhật MXH liên tục không?</label><select id="ciUrge"><option value="no">Không</option><option value="sometimes">Thỉnh thoảng</option><option value="yes">Có</option></select></div>
+          <div class="field"><label>Hoạt động JOMO hôm nay</label><input type="text" id="ciActivityText" placeholder="Ví dụ: đi bộ 20 phút, đọc sách..."></div>
+          <div class="field"><label>Điều khó khăn nhất hôm nay</label><textarea id="ciDifficulty"></textarea></div>
+          <button class="btn btn-primary" type="submit">Lưu check-in & điều chỉnh ngày sau</button>
+        </form>
+        <div id="checkinAnalysis" class="notice hidden" style="margin-top:14px"></div>
+      </div>
+    </section>
+
+    <section id="schedule" class="page">
+      <div class="section-title"><h2><span class="highlight">Thời khóa biểu hạn chế MXH</span></h2></div>
+      <div class="notice">Lịch được tạo theo dữ liệu ban đầu và điều chỉnh từ check-in. Bạn có thể sửa nội dung nếu lịch học thực tế khác.</div>
+      <div class="card" style="margin-top:14px">
+        <div id="scheduleMeta" class="mini-stat"></div>
+        <div id="scheduleList" class="schedule-list" style="margin-top:12px"></div>
+        <div class="btn-row" style="margin-top:14px">
+          <button type="button" class="btn btn-soft" onclick="addScheduleItem()">+ Thêm khung giờ</button>
+          <button type="button" class="btn btn-primary" onclick="saveScheduleEdits()">Lưu thời khóa biểu</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="streak" class="page">
+      <div class="section-title"><h2><span class="highlight">Chuỗi JOMO</span></h2></div>
+      <div class="streak card">
+        <div class="fire">🔥</div><div><div class="muted">Chuỗi JOMO hiện tại</div><strong id="streakValue">0 ngày</strong><div class="small muted">Không phải cuộc thi — mục tiêu là duy trì thói quen phù hợp với bạn.</div></div>
+      </div>
+      <div class="grid grid-4" style="margin-top:14px">
+        <div class="card"><h3 id="totalSessions">0</h3><p>Phiên học không điện thoại</p></div>
+        <div class="card"><h3 id="totalReduced">0 giờ</h3><p>Thời gian MXH giảm được</p></div>
+        <div class="card"><h3 id="totalActivities">0</h3><p>Hoạt động JOMO</p></div>
+        <div class="card"><h3 id="completedDays">0</h3><p>Ngày đạt mục tiêu</p></div>
+      </div>
+      <div class="notice" style="margin-top:14px">Không sao, JOMO không phải cuộc thi. Nếu có một ngày chưa như ý, hãy tiếp tục từ hôm nay.</div>
+    </section>
+
+    <section id="journal" class="page">
+      <div class="section-title"><h2><span class="highlight">Nhật ký JOMO</span></h2></div>
+      <div class="grid grid-2">
+        <div class="card">
+          <form id="journalForm">
+            <div class="field"><label>Ngày</label><select id="journalDay"></select></div>
+            <div class="field"><label>Cảm nhận hôm nay</label><textarea id="jFeel"></textarea></div>
+            <div class="field"><label>Điều khiến tôi muốn mở MXH</label><textarea id="jTrigger"></textarea></div>
+            <div class="field"><label>Điều tích cực khi giảm dùng điện thoại</label><textarea id="jPositive"></textarea></div>
+            <div class="field"><label>Hoạt động thay thế</label>
+              <select id="jActivity">
+                <option>Học bài</option><option>Đọc sách</option><option>Nghe nhạc</option><option>Chơi thể thao</option>
+                <option>Đi bộ</option><option>Nói chuyện với bạn bè</option><option>Ăn cùng gia đình</option><option>Ngủ sớm</option>
+                <option>Làm việc nhà</option><option>Hoạt động ngoài trời</option>
+              </select>
+            </div>
+            <div class="field"><label>Thêm ảnh (lưu trên thiết bị)</label><input type="file" id="jImage" accept="image/*"></div>
+            <button class="btn btn-primary" type="submit">Lưu nhật ký</button>
+          </form>
+        </div>
+        <div class="card"><h3>Hành trình 7 ngày</h3><div class="timeline" id="journalTimeline"></div></div>
+      </div>
+    </section>
+
+    <section id="buddy" class="page">
+      <div class="section-title"><h2><span class="highlight">Bạn đồng hành JOMO</span></h2></div>
+      <div class="notice">Phiên bản không có máy chủ sẽ lưu nhóm và lời nhắn trên thiết bị này. Khi nối Firebase/Google Sheets, có thể mở rộng thành nhóm nhiều người thật.</div>
+      <div class="grid grid-2" style="margin-top:14px">
+        <div class="card">
+          <h3>Nhóm nhỏ của bạn</h3>
+          <div class="field"><label>Tên nhóm</label><input id="buddyGroup" type="text" placeholder="Ví dụ: 11A1 JOMO"></div>
+          <div class="field"><label>Mục tiêu chung</label><input id="buddyGoal" type="text" placeholder="Ví dụ: Học 45 phút không điện thoại"></div>
+          <button type="button" class="btn btn-soft" onclick="saveBuddyGroup()">Lưu nhóm</button>
+          <div class="divider"></div>
+          <label>Lời động viên nhanh</label>
+          <div class="checks">
+            <button type="button" class="btn btn-outline" onclick="quickMsg('Cố lên!')">Cố lên!</button>
+            <button type="button" class="btn btn-outline" onclick="quickMsg('Hôm nay học tốt nhé!')">Hôm nay học tốt nhé!</button>
+            <button type="button" class="btn btn-outline" onclick="quickMsg('Tắt điện thoại 30 phút cùng nhau nào!')">30 phút cùng nhau!</button>
+            <button type="button" class="btn btn-outline" onclick="quickMsg('JOMO thôi!')">JOMO thôi!</button>
+          </div>
+          <div class="field" style="margin-top:12px"><label>Chia sẻ hoạt động tích cực</label><input id="buddyCustom" type="text" placeholder="Viết lời nhắn..."></div>
+          <button type="button" class="btn btn-primary" onclick="sendBuddyMsg()">Gửi lời nhắn</button>
+        </div>
+        <div class="card"><h3>Lời nhắn</h3><div class="buddy-messages" id="buddyMessages"></div></div>
+      </div>
+    </section>
+
+    <section id="content" class="page">
+      <div class="section-title"><h2><span class="highlight">Nội dung khiến tôi FOMO</span></h2></div>
+      <div class="notice">Website không tự dán nhãn nội dung. Chỉ lưu những nội dung mà chính bạn cảm thấy dễ kích hoạt so sánh, sợ bỏ lỡ hoặc thôi thúc kiểm tra liên tục.</div>
+      <div class="card" style="margin-top:14px">
+        <div class="field"><label>Bạn thường cảm thấy khó chịu sau khi xem loại nội dung nào?</label>
+          <div class="checks" id="fomoCategories">
+            <label class="check-chip"><input type="checkbox" value="Thành tích học tập"><span>Thành tích học tập</span></label>
+            <label class="check-chip"><input type="checkbox" value="Du lịch"><span>Du lịch</span></label>
+            <label class="check-chip"><input type="checkbox" value="Ngoại hình"><span>Ngoại hình</span></label>
+            <label class="check-chip"><input type="checkbox" value="Mua sắm"><span>Mua sắm</span></label>
+            <label class="check-chip"><input type="checkbox" value="Cuộc sống bạn bè"><span>Cuộc sống bạn bè</span></label>
+            <label class="check-chip"><input type="checkbox" value="Trend TikTok"><span>Trend TikTok</span></label>
+          </div>
+        </div>
+        <div class="inline-fields">
+          <div class="field"><label>Tài khoản / nguồn</label><input id="blockedAccount" type="text" placeholder="@tentaikhoan hoặc mô tả"></div>
+          <div class="field"><label>Từ khóa / chủ đề</label><input id="blockedKeyword" type="text" placeholder="Ví dụ: điểm số, haul..."></div>
+        </div>
+        <div class="field"><label>Ghi chú thêm</label><textarea id="blockedNote"></textarea></div>
+        <button type="button" class="btn btn-primary" onclick="saveBlocked()">Ẩn nội dung khiến tôi FOMO</button>
+        <div class="notice success" style="margin-top:14px">Hãy cân nhắc ẩn, bỏ theo dõi hoặc giảm tiếp xúc với những nội dung khiến bạn thường xuyên so sánh bản thân.</div>
+        <div id="blockedList" style="margin-top:14px"></div>
+      </div>
+    </section>
+
+    <section id="dashboard" class="page">
+      <div class="section-title"><h2><span class="highlight">Tiến trình của tôi</span></h2></div>
+      <div class="card"><h3 id="helloUser">Xin chào!</h3><p class="muted" id="dashDay">Ngày hiện tại: Ngày 1/7</p></div>
+      <div class="kpis" style="margin-top:14px">
+        <div class="kpi"><div class="label">Điểm FOMO</div><div class="value" id="dFomo">—</div></div>
+        <div class="kpi"><div class="label">MXH hôm nay</div><div class="value" id="dUsage">—</div></div>
+        <div class="kpi"><div class="label">Mục tiêu</div><div class="value" id="dGoal">—</div></div>
+        <div class="kpi"><div class="label">Chuỗi JOMO</div><div class="value" id="dStreak">0</div></div>
+        <div class="kpi"><div class="label">Tập trung</div><div class="value" id="dFocus">—</div></div>
+        <div class="kpi"><div class="label">Phiên học</div><div class="value" id="dSessions">0</div></div>
+      </div>
+      <div class="grid grid-2" style="margin-top:16px">
+        <div class="card"><h3>Thời gian MXH qua 7 ngày</h3><div class="chart"><canvas id="usageChart"></canvas></div></div>
+        <div class="card"><h3>Mức khó chịu khi bỏ lỡ</h3><div class="chart"><canvas id="discomfortChart"></canvas></div></div>
+        <div class="card"><h3>Mức tập trung khi học</h3><div class="chart"><canvas id="focusChart"></canvas></div></div>
+        <div class="card"><h3>Tỉ lệ hoàn thành thời khóa biểu</h3><div class="chart"><canvas id="completionChart"></canvas></div></div>
+      </div>
+    </section>
+
+    <section id="final" class="page">
+      <div class="section-title"><h2><span class="highlight">Ngày 7 – Đánh giá lại</span></h2></div>
+      <div class="card">
+        <p class="muted">Hãy làm lại thang tự đánh giá giống Ngày 1. Kết quả chỉ phản ánh xu hướng tự đánh giá, không phải chẩn đoán.</p>
+        <form id="finalForm">
+          <div id="finalQuiz"></div>
+          <div class="inline-fields" style="margin-top:14px">
+            <div class="field"><label>Thời lượng MXH Ngày 7 (giờ)</label><input id="finalUsage" type="number" min="0" max="24" step="0.1" required></div>
+            <div class="field"><label>Số lần kiểm tra điện thoại</label><input id="finalChecks" type="number" min="0" max="500" required></div>
+            <div class="field"><label>Khó chịu khi bỏ lỡ (1–5)</label><select id="finalDiscomfort"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+            <div class="field"><label>Tập trung khi học (1–5)</label><select id="finalFocus"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+          </div>
+          <button class="btn btn-primary" type="submit">Lưu đánh giá Ngày 7</button>
+        </form>
+      </div>
+      <div id="finalCompare" class="hidden">
+        <div class="section-title"><h3>Kết quả trước – sau</h3></div>
+        <div class="grid grid-3" id="compareCards"></div>
+        <div class="card" style="margin-top:14px">
+          <h3>Điểm FOMO theo thời gian</h3><div class="chart"><canvas id="fomoCompareChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="section-title"><h3>Phản hồi sau chương trình</h3></div>
+      <div class="card">
+        <form id="feedbackForm">
+          <div class="inline-fields">
+            <div class="field"><label>Mức FOMO của bạn</label><select id="fbFomo"><option>Giảm nhiều</option><option>Giảm một ít</option><option>Không thay đổi</option><option>Tăng</option></select></div>
+            <div class="field"><label>Khả năng tập trung</label><select id="fbFocus"><option>Tốt hơn nhiều</option><option>Tốt hơn một ít</option><option>Không thay đổi</option><option>Kém hơn</option></select></div>
+            <div class="field"><label>Thời khóa biểu hạn chế MXH</label><select id="fbSchedule"><option>Rất dễ thực hiện</option><option>Khá dễ</option><option>Bình thường</option><option>Khó</option><option>Rất khó</option></select></div>
+            <div class="field"><label>Hoạt động giúp bạn nhiều nhất</label><select id="fbBest"><option>Thời khóa biểu</option><option>Chuỗi JOMO</option><option>Nhật ký</option><option>Phiên học không điện thoại</option><option>Hoạt động thay thế</option><option>Bạn đồng hành</option></select></div>
+          </div>
+          <div class="field"><label>Điều gì khiến bạn khó duy trì JOMO?</label><textarea id="fbDifficulty"></textarea></div>
+          <div class="field"><label>Bạn có muốn tiếp tục kế hoạch sau 7 ngày không?</label><select id="fbContinue"><option>Có</option><option>Có, nhưng cần điều chỉnh</option><option>Chưa chắc</option><option>Không</option></select></div>
+          <button class="btn btn-soft" type="submit">Lưu phản hồi</button>
+        </form>
+      </div>
+
+      <div class="section-title"><h3>Theo dõi sau 2–4 tuần</h3></div>
+      <div class="card">
+        <div class="inline-fields">
+          <div class="field"><label>Mốc đánh giá</label><select id="followMilestone"><option value="week2">Sau 2 tuần</option><option value="week4">Sau 4 tuần</option></select></div>
+          <div class="field"><label>Điểm FOMO ngắn (0–100)</label><input id="followScore" type="number" min="0" max="100"></div>
+        </div>
+        <button type="button" class="btn btn-outline" onclick="saveFollowUp()">Lưu đánh giá theo dõi</button>
+      </div>
+    </section>
+
+    <div id="browserNotice" class="notice warn hidden" style="margin-top:18px">
+      Nếu bạn đang mở file bằng chế độ xem trước trong ứng dụng Tệp/ChatGPT trên iPhone, JavaScript có thể bị chặn. Hãy mở bản này qua Safari từ GitHub Pages để dùng đầy đủ chức năng.
+    </div>
+    <div class="footer">FOMO Check Minh Đạm • Công cụ hỗ trợ tự theo dõi thói quen số • Dữ liệu mặc định được lưu trên thiết bị của bạn.</div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const QUESTIONS = [
+  "Tôi lo mình bỏ lỡ những điều thú vị đang xảy ra trên mạng xã hội.",
+  "Tôi thường kiểm tra điện thoại để xem có thông tin mới hay không.",
+  "Tôi thấy khó chịu khi bạn bè biết hoặc tham gia điều gì đó mà tôi không biết.",
+  "Tôi cảm thấy cần cập nhật liên tục để không bị tụt lại.",
+  "Tôi khó tập trung học vì nghĩ tới thông báo hoặc nội dung trên mạng.",
+  "Tôi thường so sánh cuộc sống hoặc thành tích của mình với người khác trên mạng.",
+  "Tôi mở mạng xã hội theo thói quen ngay cả khi không có mục đích rõ ràng.",
+  "Tôi sợ bỏ lỡ tin nhắn, trend hoặc hoạt động của bạn bè.",
+  "Tôi kéo xem nội dung lâu hơn dự định ban đầu.",
+  "Sau khi dùng mạng xã hội, tôi vẫn muốn kiểm tra lại chỉ sau một thời gian ngắn."
+];
+
+const KEY = "fomoMinhDamJomoV1";
+const $ = (id) => document.getElementById(id);
+let memoryStore = null;
+
+const emptyData = () => ({
+  name:"", startDate:"", currentDay:1, initialFomoScore:null, initialLevel:"",
+  initialUsage:null, initialChecks:null, initialDiscomfort:null, initialFocus:null,
+  platforms:[], peakTime:"", studyStart:"19:00", studyEnd:"21:00",
+  days:{day1:{},day2:{},day3:{},day4:{},day5:{},day6:{},day7:{}},
+  goals:{}, schedule:[], jomoStreak:0, journal:{}, blockedContent:[],
+  buddy:{group:"",goal:"",messages:[]}, finalAssessment:null, feedback:null,
+  followUps:{week2:null,week4:null}
+});
+let data = load();
+
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    return {...emptyData(), ...(raw ? JSON.parse(raw) : (memoryStore || {}))};
+  }catch(e){
+    return {...emptyData(), ...(memoryStore || {})};
+  }
+}
+function save(){
+  memoryStore = JSON.parse(JSON.stringify(data));
+  try{
+    localStorage.setItem(KEY, JSON.stringify(data));
+  }catch(e){
+    // Safari/private mode or local file preview may block localStorage.
+    // The website still works for the current session using memoryStore.
+  }
+  renderAll();
+}
+function toast(msg){
+  const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2400);
+}
+function go(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+  document.getElementById("sidebar").classList.remove("open"); document.getElementById("overlay").classList.remove("show");
+  const map={
+    home:["FOMO Check Minh Đạm","Chương trình JOMO 7 ngày dành cho học sinh THPT."],
+    assessment:["Đánh giá FOMO","Ghi nhận dữ liệu ban đầu để xây dựng kế hoạch phù hợp."],
+    plan:["Kế hoạch 7 ngày","Check-in mỗi ngày và điều chỉnh dần dần."],
+    schedule:["Thời khóa biểu","Tạo khoảng học không điện thoại và khung giờ MXH hợp lý."],
+    streak:["Chuỗi JOMO","Ghi nhận nỗ lực mà không biến thành cuộc đua."],
+    journal:["Nhật ký JOMO","Lưu cảm nhận, hoạt động tích cực và hình ảnh."],
+    buddy:["Bạn đồng hành JOMO","Động viên nhau mà không so sánh thành tích."],
+    content:["Nội dung khiến tôi FOMO","Bạn chủ động chọn nội dung muốn giảm tiếp xúc."],
+    dashboard:["Tiến trình của tôi","Theo dõi xu hướng thay đổi từng ngày."],
+    final:["Đánh giá cuối chương trình","So sánh trước – sau và theo dõi sau 2–4 tuần."]
+  };
+  document.getElementById("topTitle").textContent=map[id][0]; document.getElementById("topSubtitle").textContent=map[id][1];
+  if(id==="dashboard") drawDashboardCharts();
+  if(id==="final") drawFinal();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+document.getElementById("nav").addEventListener("click",e=>{const b=e.target.closest(".nav-btn");if(b)go(b.dataset.page)});
+document.getElementById("mobileMenu").onclick=()=>{document.getElementById("sidebar").classList.add("open");document.getElementById("overlay").classList.add("show")};
+document.getElementById("overlay").onclick=()=>{document.getElementById("sidebar").classList.remove("open");document.getElementById("overlay").classList.remove("show")};
+
+function makeScale(id,name,selected=3){
+  const el=document.getElementById(id); el.innerHTML="";
+  for(let i=1;i<=5;i++) el.insertAdjacentHTML("beforeend",`<label><input type="radio" name="${name}" value="${i}" ${i===selected?"checked":""}><span>${i}</span></label>`);
+}
+function makeQuiz(id,prefix){
+  const root=document.getElementById(id); root.innerHTML="";
+  QUESTIONS.forEach((q,idx)=>{
+    let opts="";
+    for(let i=1;i<=5;i++) opts+=`<label><input type="radio" name="${prefix}${idx}" value="${i}" ${i===3?"checked":""}><span>${i}</span></label>`;
+    root.insertAdjacentHTML("beforeend",`<div class="quiz-item"><p>${idx+1}. ${q}</p><div class="radio-row">${opts}</div></div>`);
+  });
+}
+function getQuizScore(prefix){
+  let sum=0;
+  QUESTIONS.forEach((_,idx)=>{sum+=Number(document.querySelector(`input[name="${prefix}${idx}"]:checked`).value)});
+  return Math.round(((sum-10)/40)*100);
+}
+function level(score){ return score<34?"Thấp":score<67?"Trung bình":"Cao"; }
+
+function generateGoal(baseUsage,day){
+  if(baseUsage==null) return null;
+  let g=baseUsage;
+  if(baseUsage>5) g=baseUsage*Math.pow(.88,Math.max(0,day-1));
+  else if(baseUsage>=3) g=Math.max(1.5,baseUsage-(day-1)*.6);
+  else g=Math.max(1,baseUsage-(day-1)*.2);
+  return Math.round(g*10)/10;
+}
+function buildInitialGoals(){
+  for(let d=1;d<=7;d++) data.goals[d]=generateGoal(data.initialUsage,d);
+}
+function generateSchedule(){
+  const goal=data.goals[data.currentDay]||data.initialUsage||3;
+  const studyStart=data.studyStart||"19:00", studyEnd=data.studyEnd||"21:00";
+  const checkMins=goal>5?25:goal>=3?20:15;
+  data.schedule=[
+    {time:"07:00–11:30",task:"Học tập / sinh hoạt buổi sáng – ưu tiên không MXH",type:"Tập trung"},
+    {time:`11:30–${addMinutes("11:30",checkMins)}`,task:"Khung kiểm tra MXH có chủ đích",type:"MXH"},
+    {time:"13:30–16:30",task:"Học tập – bật chế độ tập trung",type:"Tập trung"},
+    {time:"16:30–17:00",task:"Nghỉ / vận động / đi bộ",type:"JOMO"},
+    {time:`17:00–${addMinutes("17:00",checkMins)}`,task:"Khung sử dụng MXH",type:"MXH"},
+    {time:`${studyStart}–${studyEnd}`,task:"Phiên học không điện thoại",type:"Tập trung"},
+    {time:`21:00–${addMinutes("21:00",checkMins)}`,task:"Kiểm tra MXH lần cuối",type:"MXH"},
+    {time:`Sau ${addMinutes("21:00",checkMins)}`,task:"Chế độ JOMO – tránh cuộn xem không mục đích",type:"JOMO"}
+  ];
+}
+function addMinutes(t,m){let [h,mi]=t.split(":").map(Number); let d=new Date(2000,0,1,h,mi+m); return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;}
+
+document.getElementById("assessmentForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const score=getQuizScore("q");
+  data.name=document.getElementById("name").value.trim();
+  data.startDate=new Date().toISOString();
+  data.currentDay=1; data.initialFomoScore=score; data.initialLevel=level(score);
+  data.initialUsage=Number(document.getElementById("usageHours").value);
+  data.initialChecks=Number(document.getElementById("checkCount").value);
+  data.peakTime=document.getElementById("peakTime").value;
+  data.platforms=[...document.querySelectorAll("#platforms input:checked")].map(x=>x.value);
+  data.initialDiscomfort=Number(document.querySelector('input[name="initialDiscomfort"]:checked').value);
+  data.initialFocus=Number(document.querySelector('input[name="initialFocus"]:checked').value);
+  data.studyStart=document.getElementById("studyStart").value; data.studyEnd=document.getElementById("studyEnd").value;
+  data.days.day1={
+    usage:data.initialUsage,checks:data.initialChecks,discomfort:data.initialDiscomfort,focus:data.initialFocus,completion:0,sessions:0,activities:0,
+    feel:document.getElementById("day1Feel").value,trigger:document.getElementById("day1Trigger").value,distracted:document.getElementById("day1Distracted").value
+  };
+  data.journal.day1={feel:data.days.day1.feel,trigger:data.days.day1.trigger,positive:"",activity:"",image:""};
+  buildInitialGoals(); generateSchedule(); save();
+  const box=document.getElementById("assessmentResult"); box.classList.remove("hidden");
+  box.innerHTML=`Điểm tự đánh giá FOMO ban đầu: <b>${score}/100</b> — mức <b>${data.initialLevel}</b>. Kế hoạch 7 ngày đã được tạo theo dữ liệu của bạn.`;
+  toast("Đã lưu đánh giá và tạo kế hoạch 7 ngày.");
+});
+
+function analyzeCheckin(day,obj){
+  let msgs=[]; let nextGoal=data.goals[day+1] ?? data.goals[day] ?? data.initialUsage;
+  if(obj.completion>=80 && obj.discomfort<=2){ nextGoal=Math.max(.5,Math.round((obj.usage*.88)*10)/10); msgs.push("Bạn đang thích nghi khá tốt. Ngày sau có thể giảm nhẹ khoảng 10–12% thời lượng MXH.");}
+  else if(obj.discomfort>=4){ nextGoal=Math.round(Math.max(obj.usage, data.goals[day]||obj.usage)*10)/10; msgs.push("Mức khó chịu đang cao, nên giữ nhịp hiện tại thay vì giảm mạnh. Hãy chọn một hoạt động JOMO dễ thực hiện.");}
+  else{ nextGoal=Math.max(.5,Math.round((obj.usage*.95)*10)/10); msgs.push("Giữ mức điều chỉnh nhẹ để dễ duy trì.");}
+  const prev = day>2 ? data.days["day"+(day-1)] : data.days.day1;
+  if(prev && Number(prev.focus) && obj.focus>Number(prev.focus)) msgs.push("Khả năng tập trung của bạn đang có xu hướng tốt hơn.");
+  if(prev && Number(prev.usage) && obj.usage>Number(prev.usage)) msgs.push("Thời gian MXH hôm nay tăng. Không sao — hãy xem lại nguyên nhân và điều chỉnh lịch ngày mai.");
+  if(day<7) data.goals[day+1]=nextGoal;
+  return msgs.join(" ");
+}
+function recomputeStreak(){
+  let streak=0, completed=0;
+  for(let d=2;d<=6;d++){
+    const x=data.days["day"+d]; if(!x || x.usage==null) continue;
+    const criteria=[x.completion>=70,x.sessions>=1,x.activities>=1].filter(Boolean).length;
+    if(criteria>=2){streak++;completed++;} else streak=0;
+  }
+  data.jomoStreak=streak; return completed;
+}
+document.getElementById("checkinForm").addEventListener("submit",e=>{
+  e.preventDefault(); const day=Number(document.getElementById("checkinDay").value);
+  const obj={
+    usage:Number(document.getElementById("ciUsage").value), checks:Number(document.getElementById("ciChecks").value),
+    completion:Number(document.getElementById("ciCompletion").value), discomfort:Number(document.getElementById("ciDiscomfort").value),
+    focus:Number(document.getElementById("ciFocus").value), sessions:Number(document.getElementById("ciSessions").value||0),
+    activities:Number(document.getElementById("ciActivities").value||0), urge:document.getElementById("ciUrge").value,
+    activityText:document.getElementById("ciActivityText").value, difficulty:document.getElementById("ciDifficulty").value
+  };
+  data.days["day"+day]=obj; data.currentDay=Math.max(data.currentDay,Math.min(7,day+1));
+  const analysis=analyzeCheckin(day,obj); recomputeStreak(); generateSchedule(); save();
+  const box=document.getElementById("checkinAnalysis");box.classList.remove("hidden");box.textContent=analysis;
+  toast("Đã lưu check-in và điều chỉnh mục tiêu ngày sau.");
+});
+
+function renderSchedule(){
+  const list=document.getElementById("scheduleList"); list.innerHTML="";
+  if(!data.schedule.length) generateSchedule();
+  data.schedule.forEach((it,i)=>{
+    list.insertAdjacentHTML("beforeend",`<div class="schedule-item">
+      <input class="schedule-time-input" data-i="${i}" value="${escapeHtml(it.time)}" aria-label="Thời gian">
+      <input class="schedule-task-input" data-i="${i}" value="${escapeHtml(it.task)}" aria-label="Nội dung">
+      <select class="schedule-type-input" data-i="${i}"><option ${it.type==="Tập trung"?"selected":""}>Tập trung</option><option ${it.type==="MXH"?"selected":""}>MXH</option><option ${it.type==="JOMO"?"selected":""}>JOMO</option></select>
+    </div>`);
+  });
+  document.getElementById("scheduleMeta").innerHTML=`Mục tiêu hiện tại: <b>${fmtGoal(data.goals[data.currentDay])}</b> giờ MXH/ngày • Điều chỉnh theo Ngày ${data.currentDay}/7.`;
+}
+function addScheduleItem(){data.schedule.push({time:"",task:"",type:"JOMO"});renderSchedule()}
+function saveScheduleEdits(){
+  [...document.querySelectorAll(".schedule-time-input")].forEach(el=>data.schedule[el.dataset.i].time=el.value);
+  [...document.querySelectorAll(".schedule-task-input")].forEach(el=>data.schedule[el.dataset.i].task=el.value);
+  [...document.querySelectorAll(".schedule-type-input")].forEach(el=>data.schedule[el.dataset.i].type=el.value);
+  save();toast("Đã lưu thời khóa biểu.");
+}
+
+document.getElementById("journalForm").addEventListener("submit",async e=>{
+  e.preventDefault(); const d=$("journalDay").value;
+  const file=$("jImage").files[0];
+  const image=file?await compressImage(file):((data.journal[d]||{}).image||"");
+  data.journal[d]={feel:$("jFeel").value,trigger:$("jTrigger").value,positive:$("jPositive").value,activity:$("jActivity").value,image};
+  try{save();toast("Đã lưu nhật ký.");}
+  catch(err){data.journal[d].image="";save();toast("Ảnh quá lớn để lưu cục bộ, nội dung chữ vẫn được lưu.");}
+});
+function compressImage(file){
+  return new Promise(resolve=>{
+    const r=new FileReader();
+    r.onerror=()=>resolve("");
+    r.onload=()=>{
+      const img=new Image();
+      img.onerror=()=>resolve("");
+      img.onload=()=>{
+        try{
+          const max=900,scale=Math.min(1,max/Math.max(img.width,img.height));
+          const c=document.createElement("canvas");
+          c.width=Math.max(1,Math.round(img.width*scale));
+          c.height=Math.max(1,Math.round(img.height*scale));
+          c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+          resolve(c.toDataURL("image/jpeg",.68));
+        }catch(e){ resolve(""); }
+      };
+      img.src=r.result;
+    };
+    r.readAsDataURL(file);
+  });
+}
+function renderJournal(){
+  const root=document.getElementById("journalTimeline"); root.innerHTML="";
+  for(let d=1;d<=7;d++){
+    const x=data.journal["day"+d];
+    root.insertAdjacentHTML("beforeend",`<div class="timeline-item"><div class="timeline-day">Ngày ${d}</div>
+      <div class="timeline-entry">${x?`<div>${escapeHtml(x.feel||"")}</div><div class="small muted">${escapeHtml(x.activity||"")}</div>${x.image?`<img src="${x.image}" alt="Ảnh nhật ký ngày ${d}">`:""}`:`<span class="muted small">Chưa có ghi chép.</span>`}</div></div>`);
+  }
+}
+
+function saveBuddyGroup(){data.buddy.group=$("buddyGroup").value;data.buddy.goal=$("buddyGoal").value;save();toast("Đã lưu nhóm đồng hành.")}
+function quickMsg(msg){data.buddy.messages.push({name:data.name||"Bạn",text:msg,time:new Date().toLocaleString("vi-VN")});save();toast("Đã gửi lời động viên.")}
+function sendBuddyMsg(){const txt=$("buddyCustom").value.trim();if(!txt)return;quickMsg(txt);$("buddyCustom").value=""}
+function renderBuddy(){
+  $("buddyGroup").value=data.buddy.group||"";$("buddyGoal").value=data.buddy.goal||"";
+  $("buddyMessages").innerHTML=(data.buddy.messages||[]).slice().reverse().map(m=>`<div class="msg"><strong>${escapeHtml(m.name)}</strong>${escapeHtml(m.text)}<br><small>${escapeHtml(m.time)}</small></div>`).join("")||'<div class="muted small">Chưa có lời nhắn.</div>';
+}
+
+function saveBlocked(){
+  const cats=[...document.querySelectorAll("#fomoCategories input:checked")].map(x=>x.value);
+  const item={cats,account:$("blockedAccount").value,keyword:$("blockedKeyword").value,note:$("blockedNote").value,created:new Date().toLocaleDateString("vi-VN")};
+  data.blockedContent.push(item);save();$("blockedAccount").value="";$("blockedKeyword").value="";$("blockedNote").value="";toast("Đã lưu nội dung bạn muốn giảm tiếp xúc.");
+}
+function removeBlocked(i){data.blockedContent.splice(i,1);save();toast("Đã xóa mục.");}
+function renderBlocked(){
+  $("blockedList").innerHTML=(data.blockedContent||[]).map((x,i)=>`<div class="card" style="margin-bottom:10px;padding:13px"><b>${escapeHtml((x.cats||[]).join(", ")||"Nội dung tự chọn")}</b>
+  <div class="small muted">${escapeHtml(x.account||"")} ${x.keyword?("• "+escapeHtml(x.keyword)):""}</div><div class="small">${escapeHtml(x.note||"")}</div>
+  <button class="btn btn-danger" style="margin-top:8px;padding:7px 10px" onclick="removeBlocked(${i})">Xóa</button></div>`).join("")||'<div class="muted small">Chưa có nội dung nào được bạn đánh dấu.</div>';
+}
+
+document.getElementById("finalForm").addEventListener("submit",e=>{
+  e.preventDefault(); const score=getQuizScore("fq");
+  data.finalAssessment={score,usage:Number($("finalUsage").value),checks:Number($("finalChecks").value),discomfort:Number($("finalDiscomfort").value),focus:Number($("finalFocus").value),date:new Date().toISOString()};
+  data.days.day7={...(data.days.day7||{}),usage:data.finalAssessment.usage,checks:data.finalAssessment.checks,discomfort:data.finalAssessment.discomfort,focus:data.finalAssessment.focus};
+  data.currentDay=7; save();toast("Đã lưu đánh giá Ngày 7.");drawFinal();
+});
+document.getElementById("feedbackForm").addEventListener("submit",e=>{
+  e.preventDefault();data.feedback={fomo:$("fbFomo").value,focus:$("fbFocus").value,schedule:$("fbSchedule").value,best:$("fbBest").value,difficulty:$("fbDifficulty").value,continue:$("fbContinue").value};save();toast("Đã lưu phản hồi.");
+});
+function saveFollowUp(){
+  const key=$("followMilestone").value,score=Number($("followScore").value);
+  if(Number.isNaN(score)||score<0||score>100){toast("Hãy nhập điểm từ 0 đến 100.");return}
+  data.followUps[key]={score,date:new Date().toISOString()};save();toast("Đã lưu mốc theo dõi.");
+}
+
+function renderPlan(){
+  const root=document.getElementById("planCards");root.innerHTML="";
+  for(let d=1;d<=7;d++){
+    const x=data.days["day"+d], goal=data.goals[d];
+    const title=d===1?"Đánh giá ban đầu":d===7?"Đánh giá lại":"Check-in & điều chỉnh";
+    root.insertAdjacentHTML("beforeend",`<div class="card"><div class="tag">Ngày ${d}</div><h3 style="margin-top:10px">${title}</h3><p>Mục tiêu MXH: <b>${fmtGoal(goal)}</b> giờ${x&&x.usage!=null?`<br>Thực tế: <b>${x.usage}</b> giờ`:""}</p></div>`);
+  }
+}
+function fmtGoal(v){return v==null?"—":Number(v).toFixed(1)}
+
+function renderStats(){
+  const cur=data.days["day"+data.currentDay]||{}, latest=latestDayData();
+  const usage=cur.usage??latest.usage??data.initialUsage;
+  const focus=cur.focus??latest.focus??data.initialFocus;
+  const sessions=Object.values(data.days).reduce((s,x)=>s+Number(x.sessions||0),0);
+  const streak=data.jomoStreak||0;
+  const goal=data.goals[data.currentDay];
+  const fomo=data.finalAssessment?.score??data.initialFomoScore;
+  $("kpiFomo").textContent=fomo??"—";$("kpiUsage").textContent=usage??"—";$("kpiGoal").textContent=fmtGoal(goal);$("kpiStreak").textContent=streak;$("kpiFocus").textContent=focus??"—";$("kpiSessions").textContent=sessions;
+  $("dFomo").textContent=fomo??"—";$("dUsage").textContent=usage??"—";$("dGoal").textContent=fmtGoal(goal);$("dStreak").textContent=streak;$("dFocus").textContent=focus??"—";$("dSessions").textContent=sessions;
+  $("helloUser").textContent=`Xin chào${data.name?", "+data.name:""}!`;$("dashDay").textContent=`Ngày hiện tại: Ngày ${data.currentDay}/7`;
+}
+function latestDayData(){
+  for(let d=7;d>=1;d--){const x=data.days["day"+d];if(x&&x.usage!=null)return x}return {};
+}
+function renderStreak(){
+  const completed=recomputeStreak();
+  $("streakValue").textContent=`${data.jomoStreak||0} ngày`;
+  const sessions=Object.values(data.days).reduce((s,x)=>s+Number(x.sessions||0),0);
+  const acts=Object.values(data.days).reduce((s,x)=>s+Number(x.activities||0),0);
+  const reduced=Object.values(data.days).reduce((s,x)=>s+(x.usage!=null&&data.initialUsage!=null?Math.max(0,data.initialUsage-x.usage):0),0);
+  $("totalSessions").textContent=sessions;$("totalActivities").textContent=acts;$("totalReduced").textContent=`${reduced.toFixed(1)} giờ`;$("completedDays").textContent=completed;
+}
+function renderDaySelectors(){
+  $("checkinDay").innerHTML="";for(let d=2;d<=6;d++)$("checkinDay").insertAdjacentHTML("beforeend",`<option value="${d}">Ngày ${d}</option>`);
+  $("checkinDay").value=String(Math.min(6,Math.max(2,data.currentDay)));
+  $("journalDay").innerHTML="";for(let d=1;d<=7;d++)$("journalDay").insertAdjacentHTML("beforeend",`<option value="day${d}">Ngày ${d}</option>`);
+  $("journalDay").value=`day${data.currentDay}`;
+}
+function renderProgress(){
+  const pct=(data.currentDay/7)*100;$("homeProgress").style.width=pct+"%";$("homeProgressText").textContent=`Tiến trình: Ngày ${data.currentDay}/7`;$("dayPill").textContent=`Ngày ${data.currentDay}/7`;
+}
+function renderFinalCompare(){
+  if(!data.finalAssessment){$("finalCompare").classList.add("hidden");return}
+  $("finalCompare").classList.remove("hidden");
+  const f=data.finalAssessment, diff=f.score-data.initialFomoScore, usageDiff=f.usage-data.initialUsage, focusDiff=f.focus-data.initialFocus;
+  const trend=diff<-3?"Có xu hướng giảm":diff>3?"Có xu hướng tăng":"Không thay đổi đáng kể";
+  $("compareCards").innerHTML=`
+    <div class="card"><h3>Điểm tự đánh giá FOMO</h3><div class="compare"><div class="compare-box">Ngày 1<br><b>${data.initialFomoScore}/100</b></div><div class="compare-box">Ngày 7<br><b>${f.score}/100</b></div></div><div class="delta">${diff>0?"+":""}${diff} điểm</div><div class="muted small">${trend}</div></div>
+    <div class="card"><h3>Thời gian MXH</h3><div class="compare"><div class="compare-box">Ngày 1<br><b>${data.initialUsage} giờ</b></div><div class="compare-box">Ngày 7<br><b>${f.usage} giờ</b></div></div><div class="delta">${usageDiff>0?"+":""}${usageDiff.toFixed(1)} giờ</div></div>
+    <div class="card"><h3>Mức tập trung</h3><div class="compare"><div class="compare-box">Ngày 1<br><b>${data.initialFocus}/5</b></div><div class="compare-box">Ngày 7<br><b>${f.focus}/5</b></div></div><div class="delta">${focusDiff>0?"+":""}${focusDiff} mức</div></div>`;
+}
+function drawFinal(){renderFinalCompare();setTimeout(()=>{
+  if(data.finalAssessment){
+    const labels=["Ngày 1","Ngày 7"];const vals=[data.initialFomoScore,data.finalAssessment.score];
+    if(data.followUps.week2){labels.push("Tuần 2");vals.push(data.followUps.week2.score)}
+    if(data.followUps.week4){labels.push("Tuần 4");vals.push(data.followUps.week4.score)}
+    drawLine("fomoCompareChart",labels,vals,100);
+  }
+},50)}
+
+function renderAll(){
+  renderProgress();renderStats();renderPlan();renderSchedule();renderStreak();renderJournal();renderBuddy();renderBlocked();renderDaySelectors();renderFinalCompare();
+}
+function daySeries(field){
+  const vals=[];for(let d=1;d<=7;d++){const x=data.days["day"+d]||{};vals.push(x[field]??null)}return vals;
+}
+function drawDashboardCharts(){
+  setTimeout(()=>{
+    drawLine("usageChart",["1","2","3","4","5","6","7"],daySeries("usage"),Math.max(6,data.initialUsage||6));
+    drawLine("discomfortChart",["1","2","3","4","5","6","7"],daySeries("discomfort"),5);
+    drawLine("focusChart",["1","2","3","4","5","6","7"],daySeries("focus"),5);
+    drawLine("completionChart",["1","2","3","4","5","6","7"],daySeries("completion"),100);
+  },50);
+}
+function drawLine(id,labels,values,maxY){
+  const c=document.getElementById(id);if(!c)return;const rect=c.getBoundingClientRect();const dpr=window.devicePixelRatio||1;
+  c.width=Math.max(300,rect.width*dpr);c.height=Math.max(180,rect.height*dpr);const ctx=c.getContext("2d");ctx.scale(dpr,dpr);
+  const w=rect.width,h=rect.height,p=34;ctx.clearRect(0,0,w,h);ctx.lineWidth=1;ctx.strokeStyle="#e5e7eb";
+  for(let i=0;i<5;i++){const y=p+(h-2*p)*i/4;ctx.beginPath();ctx.moveTo(p,y);ctx.lineTo(w-p,y);ctx.stroke()}
+  ctx.font="11px system-ui";ctx.fillStyle="#98a2b3";ctx.textAlign="center";
+  labels.forEach((l,i)=>{const x=p+(w-2*p)*(labels.length===1?0:i/(labels.length-1));ctx.fillText(l,x,h-10)});
+  const pts=[];values.forEach((v,i)=>{if(v==null)return;const x=p+(w-2*p)*(labels.length===1?0:i/(labels.length-1));const y=h-p-(h-2*p)*(Number(v)/maxY);pts.push([x,y])});
+  if(!pts.length){ctx.fillStyle="#98a2b3";ctx.textAlign="center";ctx.fillText("Chưa có đủ dữ liệu",w/2,h/2);return}
+  ctx.strokeStyle="#4f46e5";ctx.lineWidth=3;ctx.beginPath();pts.forEach((pt,i)=>i?ctx.lineTo(...pt):ctx.moveTo(...pt));ctx.stroke();
+  ctx.fillStyle="#8b5cf6";pts.forEach(pt=>{ctx.beginPath();ctx.arc(pt[0],pt[1],4,0,Math.PI*2);ctx.fill()});
+}
+function escapeHtml(s=""){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+
+window.addEventListener("resize",()=>{if(document.getElementById("dashboard").classList.contains("active"))drawDashboardCharts();if(document.getElementById("final").classList.contains("active"))drawFinal()});
+
+makeQuiz("quiz","q");
+makeQuiz("finalQuiz","fq");
+makeScale("initialDiscomfort","initialDiscomfort",3);
+makeScale("initialFocus","initialFocus",3);
+
+try{
+  const testKey="__fomo_storage_test__";
+  localStorage.setItem(testKey,"1");
+  localStorage.removeItem(testKey);
+}catch(e){
+  $("browserNotice").classList.remove("hidden");
+}
+renderAll();
+</script>
+</body>
+</html>
