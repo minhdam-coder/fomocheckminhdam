@@ -393,6 +393,7 @@
           <div class="divider"></div>
           <div class="inline-fields">
             <div class="field"><label>Tên hoặc biệt danh</label><input type="text" id="name" placeholder="Ví dụ: Minh" required></div>
+            <div class="field"><label>Lớp</label><input type="text" id="className" placeholder="Ví dụ: 11A1" required></div>
             <div class="field"><label>Thời lượng MXH trung bình mỗi ngày (giờ)</label><input type="number" id="usageHours" min="0" max="24" step="0.1" placeholder="Ví dụ: 4.5" required></div>
             <div class="field"><label>Số lần kiểm tra điện thoại/MXH mỗi ngày</label><input type="number" id="checkCount" min="0" max="500" placeholder="Ví dụ: 35" required></div>
             <div class="field"><label>Khung giờ dùng MXH nhiều nhất</label>
@@ -422,7 +423,7 @@
           <div class="field"><label>Khi không cầm điện thoại, bạn thường cảm thấy thế nào?</label><textarea id="day1Feel" required></textarea></div>
           <div class="field"><label>Điều gì khiến bạn muốn mở mạng xã hội?</label><textarea id="day1Trigger" required></textarea></div>
           <div class="field"><label>Bạn có bị mất tập trung khi học vì điện thoại không?</label><textarea id="day1Distracted" required></textarea></div>
-          <div class="notice">Đây là dữ liệu ban đầu để FOMO Check Minh Đạm xây dựng kế hoạch phù hợp với bạn.</div>
+          <div class="notice">Đây là dữ liệu ban đầu để FOMO Check Minh Đạm xây dựng kế hoạch phù hợp với bạn. Khi bấm “Lưu đánh giá & tạo kế hoạch”, kết quả đánh giá cơ bản (tên/biệt danh, lớp và các chỉ số trên) sẽ được ghi vào bảng thống kê của dự án.</div>
           <div class="btn-row" style="margin-top:16px"><button type="submit" class="btn btn-primary">Lưu đánh giá & tạo kế hoạch</button></div>
         </form>
         <div id="assessmentResult" class="notice success hidden" style="margin-top:16px"></div>
@@ -645,11 +646,28 @@ const QUESTIONS = [
 ];
 
 const KEY = "fomoMinhDamJomoV1";
+const GOOGLE_SHEET_WEB_APP = "https://script.google.com/macros/s/AKfycbz05TOeZSnraoW7fEWgIeLbiwA3mkdHDYpso5Hpdhx2MFl-6WeZYsU0eeepka4Ut1xe/exec";
+
+/* Gửi kết quả đánh giá về Google Sheets.
+   Dùng text/plain + no-cors để hoạt động ổn định từ GitHub Pages trên điện thoại/máy tính. */
+function sendAssessmentToGoogleSheet(payload) {
+  try {
+    return fetch(GOOGLE_SHEET_WEB_APP, {
+      method: "POST",
+      mode: "no-cors",
+      cache: "no-store",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    }).then(() => true).catch(() => false);
+  } catch (e) {
+    return Promise.resolve(false);
+  }
+}
 const $ = (id) => document.getElementById(id);
 let memoryStore = null;
 
 const emptyData = () => ({
-  name:"", startDate:"", currentDay:1, initialFomoScore:null, initialLevel:"",
+  name:"", className:"", startDate:"", currentDay:1, initialFomoScore:null, initialLevel:"",
   initialUsage:null, initialChecks:null, initialDiscomfort:null, initialFocus:null,
   platforms:[], peakTime:"", studyStart:"19:00", studyEnd:"21:00",
   days:{day1:{},day2:{},day3:{},day4:{},day5:{},day6:{},day7:{}},
@@ -759,6 +777,7 @@ document.getElementById("assessmentForm").addEventListener("submit",e=>{
   e.preventDefault();
   const score=getQuizScore("q");
   data.name=document.getElementById("name").value.trim();
+  data.className=document.getElementById("className").value.trim();
   data.startDate=new Date().toISOString();
   data.currentDay=1; data.initialFomoScore=score; data.initialLevel=level(score);
   data.initialUsage=Number(document.getElementById("usageHours").value);
@@ -774,9 +793,26 @@ document.getElementById("assessmentForm").addEventListener("submit",e=>{
   };
   data.journal.day1={feel:data.days.day1.feel,trigger:data.days.day1.trigger,positive:"",activity:"",image:""};
   buildInitialGoals(); generateSchedule(); save();
+
+  // Gửi 1 dòng thống kê sang Google Sheets khi người dùng hoàn thành đánh giá ban đầu.
+  sendAssessmentToGoogleSheet({
+    name: data.name,
+    className: data.className,
+    fomoScore: data.initialFomoScore,
+    fomoLevel: data.initialLevel,
+    socialHours: data.initialUsage,
+    checkCount: data.initialChecks,
+    jomoDay: 1,
+    focus: data.initialFocus
+  }).then(ok => {
+    if (!ok) {
+      console.warn("Chưa gửi được dữ liệu thống kê về Google Sheets.");
+    }
+  });
+
   const box=document.getElementById("assessmentResult"); box.classList.remove("hidden");
   box.innerHTML=`Điểm tự đánh giá FOMO ban đầu: <b>${score}/100</b> — mức <b>${data.initialLevel}</b>. Kế hoạch 7 ngày đã được tạo theo dữ liệu của bạn.`;
-  toast("Đã lưu đánh giá và tạo kế hoạch 7 ngày.");
+  toast("Đã lưu đánh giá, tạo kế hoạch và gửi thống kê.");
 });
 
 function analyzeCheckin(day,obj){
@@ -970,6 +1006,10 @@ function drawFinal(){renderFinalCompare();setTimeout(()=>{
 },50)}
 
 function renderAll(){
+  const classInput=document.getElementById("className");
+  const nameInput=document.getElementById("name");
+  if (classInput && data.className && !classInput.value) classInput.value=data.className;
+  if (nameInput && data.name && !nameInput.value) nameInput.value=data.name;
   renderProgress();renderStats();renderPlan();renderSchedule();renderStreak();renderJournal();renderBuddy();renderBlocked();renderDaySelectors();renderFinalCompare();
 }
 function daySeries(field){
